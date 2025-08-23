@@ -258,12 +258,13 @@
   <section id="contato" class="py-16 bg-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl font-bold tracking-tight">Gostou da cobertura?</h2>
-      <p class="mt-2 text-slate-600">Entre em contato para mais informações, agendar visita ou solicitar materiais adicionais.</p>
+      $1
+      <p id="agencyInfo" class="mt-1 text-sm text-slate-500 hidden">Imobiliária: <span id="agencyName"></span></p>
       <div class="mt-6 flex items-center justify-center gap-4">
         <a id="mailtoBtn" href="mailto:contato@seudominio.com" class="px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 soft-shadow">Falar por e‑mail</a>
         <a id="whatsBtn" href="https://wa.me/5500000000000" class="px-6 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50">Falar no WhatsApp</a>
       </div>
-      <p class="mt-3 text-xs text-slate-500">Você pode parametrizar o e‑mail e o WhatsApp via URL: `?to=…&subject=…&body=…&cc=…&bcc=…&phone=…&text=…`.</p>
+      <p class="mt-3 text-xs text-slate-500">Você pode parametrizar o e‑mail, WhatsApp e a imobiliária via URL: `?to=…&subject=…&body=…&cc=…&bcc=…&phone=…&text=…&imobiliaria=…`.</p>
     </div>
   </section>
 
@@ -282,6 +283,9 @@
     // Mailto e WhatsApp dinâmicos a partir dos parâmetros da URL
     (function () {
       var usp = new URLSearchParams(window.location.search);
+
+      // Nome da imobiliária (aceita vários aliases)
+      var agency = usp.get('imobiliaria') || usp.get('agency') || usp.get('broker') || usp.get('imobiliaria_nome');
 
       // --- Mailto ---
       var toParam = usp.get('to') || usp.get('email') || usp.get('mailto');
@@ -321,9 +325,15 @@
         }
         var waHref = 'https://wa.me/' + basePhone;
         if (text) waHref += '?text=' + encodeURIComponent(text);
-        whatsLink.href = waHref;
+        $1
+
+      // --- Agency / Imobiliária ---
+      var agencyNameEl = document.getElementById('agencyName');
+      var agencyInfoEl = document.getElementById('agencyInfo');
+      if (agency && agencyNameEl && agencyInfoEl) {
+        agencyNameEl.textContent = agency;
+        agencyInfoEl.classList.remove('hidden');
       }
-    })();
   </script>
 </body>
 </html>
