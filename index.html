@@ -74,7 +74,8 @@
   <header class="sticky top-0 z-40 bg-white/90 glass border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2 font-semibold tracking-tight">
-        <span class="text-2xl" aria-hidden="true">🏙️</span>
+        <img id="siteLogo" src="" alt="Logomarca" class="h-8 w-8 object-contain hidden" />
+        <span id="siteLogoFallback" class="text-2xl" aria-hidden="true">🏙️</span>
         <span>Cobertura no Leblon</span>
       </a>
       <nav class="hidden sm:flex items-center gap-6 text-sm">
@@ -369,6 +370,18 @@
           img.alt = 'Imagem principal da cobertura';
           img.className = 'w-full h-full object-cover';
           heroEl.appendChild(img);
+        }
+      }
+
+      // --- LOGO IMAGE (optional via URL) ---
+      var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url');
+      if (logoUrl) {
+        var logoEl = document.getElementById('siteLogo');
+        var logoFallback = document.getElementById('siteLogoFallback');
+        if (logoEl) {
+          logoEl.src = logoUrl;
+          logoEl.classList.remove('hidden');
+          if (logoFallback) logoFallback.classList.add('hidden');
         }
       }
     });
