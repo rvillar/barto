@@ -74,7 +74,7 @@
   <header class="sticky top-0 z-40 bg-white/90 glass border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2 font-semibold tracking-tight">
-        <img id="siteLogo" src="" alt="Logomarca" class="h-8 w-8 object-contain hidden" />
+        <img id="siteLogo" src="" alt="Logomarca" class="h-12 w-12 object-contain hidden" />
         <span id="siteLogoFallback" class="text-2xl" aria-hidden="true">🏙️</span>
         <span>Cobertura no Leblon</span>
       </a>
@@ -356,7 +356,7 @@
       }
 
       // --- HERO IMAGE (optional via URL) ---
-      var heroUrl = getAlias('hero', 'header', 'image', 'header_image', 'capa', 'foto');
+      var heroUrl = getAlias('hero', 'hero_image', 'capa', 'foto', 'foto_destaque');
       if (heroUrl) {
         var heroEl = document.getElementById('heroImage');
         if (heroEl) {
@@ -374,7 +374,7 @@
       }
 
       // --- LOGO IMAGE (optional via URL) ---
-      var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url');
+      var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url', 'header');
       if (logoUrl) {
         var logoEl = document.getElementById('siteLogo');
         var logoFallback = document.getElementById('siteLogoFallback');
