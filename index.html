@@ -325,7 +325,8 @@
         }
         var waHref = 'https://wa.me/' + basePhone;
         if (text) waHref += '?text=' + encodeURIComponent(text);
-        $1
+        whatsLink.href = waHref;
+      }
 
       // --- Agency / Imobiliária ---
       var agencyNameEl = document.getElementById('agencyName');
