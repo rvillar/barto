@@ -214,6 +214,17 @@
           </ul>
         </div>
       </div>
+
+      <div class="mt-10">
+        <div class="p-8 bg-white rounded-2xl border-2 border-brand-600 soft-shadow text-center">
+          <h3 class="text-2xl font-bold text-slate-900">Valor do Imóvel</h3>
+          <p class="mt-2 text-4xl font-extrabold text-brand-700">R$ 5.900.000</p>
+          <div class="mt-4 text-slate-600 text-sm">
+            <p>IPTU: R$ 15.300 / ano</p>
+            <p>Condomínio: R$ 3.780 / mês</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -258,7 +269,7 @@
   <section id="contato" class="py-16 bg-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl font-bold tracking-tight">Gostou da cobertura?</h2>
-      $1
+      <p class="mt-2 text-slate-600">Entre em contato para mais informações, agendar visita ou solicitar materiais adicionais.</p>
       <p id="agencyInfo" class="mt-1 text-sm text-slate-500 hidden">Imobiliária: <span id="agencyName"></span></p>
       <div class="mt-6 flex items-center justify-center gap-4">
         <a id="mailtoBtn" href="mailto:contato@seudominio.com" class="px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 soft-shadow">Falar por e‑mail</a>
@@ -277,64 +288,77 @@
   </footer>
 
   <script>
-    // Atualiza o ano no rodapé
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Mailto e WhatsApp dinâmicos a partir dos parâmetros da URL
-    (function () {
+    document.addEventListener('DOMContentLoaded', function () {
+      // util
       var usp = new URLSearchParams(window.location.search);
+      function getAlias() {
+        for (var i = 0; i < arguments.length; i++) {
+          var v = usp.get(arguments[i]);
+          if (v !== null && v !== '') return v;
+        }
+        return null;
+      }
 
-      // Nome da imobiliária (aceita vários aliases)
-      var agency = usp.get('imobiliaria') || usp.get('agency') || usp.get('broker') || usp.get('imobiliaria_nome');
+      // rodapé: ano
+      var yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-      // --- Mailto ---
-      var toParam = usp.get('to') || usp.get('email') || usp.get('mailto');
+      // --- MAILTO ---
+      var toParam = getAlias('to', 'email', 'mailto');
       var subject = usp.get('subject');
-      var body = usp.get('body');
-      var cc = usp.get('cc');
-      var bcc = usp.get('bcc');
+      var body    = usp.get('body');
+      var cc      = usp.get('cc');
+      var bcc     = usp.get('bcc');
 
       var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       function sanitizeList(val) {
         if (!val) return '';
-        return val.split(',').map(function(v){ return v.trim();}).filter(function(v){ return emailRe.test(v); }).join(',');
+        return val.split(',')
+          .map(function (v) { return v.trim(); })
+          .filter(function (v) { return emailRe.test(v); })
+          .join(',');
       }
-
-      var mailLink = document.getElementById('mailtoBtn');
-      var to = 'contato@seudominio.com';
-      if (toParam && emailRe.test(toParam)) to = toParam;
+      var to = (toParam && emailRe.test(toParam.trim())) ? toParam.trim() : 'contato@seudominio.com';
 
       var mailQP = [];
       if (subject) mailQP.push('subject=' + encodeURIComponent(subject));
-      if (body) mailQP.push('body=' + encodeURIComponent(body));
-      var ccList = sanitizeList(cc);
+      if (body)    mailQP.push('body=' + encodeURIComponent(body));
+      var ccList  = sanitizeList(cc);
       var bccList = sanitizeList(bcc);
-      if (ccList) mailQP.push('cc=' + encodeURIComponent(ccList));
+      if (ccList)  mailQP.push('cc=' + encodeURIComponent(ccList));
       if (bccList) mailQP.push('bcc=' + encodeURIComponent(bccList));
-      if (mailLink) mailLink.href = 'mailto:' + to + (mailQP.length ? '?' + mailQP.join('&') : '');
 
-      // --- WhatsApp ---
-      var phone = usp.get('phone') || usp.get('whats') || usp.get('whatsapp');
-      var text = usp.get('text') || usp.get('wtext') || usp.get('message');
+      var mailLink = document.getElementById('mailtoBtn');
+      if (mailLink) {
+        mailLink.href = 'mailto:' + to + (mailQP.length ? ('?' + mailQP.join('&')) : '');
+      }
+
+      // --- WHATSAPP ---
+      var phoneRaw = getAlias('phone', 'whats', 'whatsapp');
+      var text     = getAlias('text', 'wtext', 'message');
+
+      var phoneDigits = (phoneRaw || '').replace(/[^0-9]/g, '');
+      // Se veio número BR sem DDI (10~11 dígitos), prefixa 55
+      if (phoneDigits && !phoneDigits.startsWith('55') && (phoneDigits.length === 10 || phoneDigits.length === 11)) {
+        phoneDigits = '55' + phoneDigits;
+      }
+      var waHref = 'https://wa.me/' + (phoneDigits || '5500000000000');
+      if (text) waHref += '?text=' + encodeURIComponent(text);
+
       var whatsLink = document.getElementById('whatsBtn');
-      if (whatsLink) {
-        var basePhone = '5500000000000'; // fallback
-        if (phone) {
-          var cleanPhone = phone.replace(/[^0-9]/g,'');
-          if (cleanPhone.length >= 10) basePhone = cleanPhone;
-        }
-        var waHref = 'https://wa.me/' + basePhone;
-        if (text) waHref += '?text=' + encodeURIComponent(text);
-        whatsLink.href = waHref;
-      }
+      if (whatsLink) whatsLink.href = waHref;
 
-      // --- Agency / Imobiliária ---
-      var agencyNameEl = document.getElementById('agencyName');
-      var agencyInfoEl = document.getElementById('agencyInfo');
-      if (agency && agencyNameEl && agencyInfoEl) {
-        agencyNameEl.textContent = agency;
-        agencyInfoEl.classList.remove('hidden');
+      // --- IMOBILIÁRIA ---
+      var agency = getAlias('imobiliaria', 'agency', 'broker', 'imobiliaria_nome');
+      if (agency) {
+        var agencyNameEl = document.getElementById('agencyName');
+        var agencyInfoEl = document.getElementById('agencyInfo');
+        if (agencyNameEl && agencyInfoEl) {
+          agencyNameEl.textContent = agency;
+          agencyInfoEl.classList.remove('hidden');
+        }
       }
+    });
   </script>
-</body>
-</html>
+  </body>
+  </html>
