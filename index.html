@@ -108,7 +108,7 @@
       </div>
       <div class="soft-shadow rounded-2xl overflow-hidden">
         <!-- Hero imagem placeholder -->
-        <div class="w-full h-72 sm:h-96 bg-slate-200 grid place-items-center" role="img" aria-label="Imagem principal da cobertura (placeholder)">
+        <div id="heroImage" class="w-full h-72 sm:h-96 bg-slate-200 grid place-items-center" role="img" aria-label="Imagem principal da cobertura (placeholder)">
           <span class="text-slate-500">Imagem principal (substituir pelo destaque da cobertura)</span>
         </div>
       </div>
@@ -270,7 +270,7 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl font-bold tracking-tight">Gostou da cobertura?</h2>
       <p class="mt-2 text-slate-600">Entre em contato para mais informações, agendar visita ou solicitar materiais adicionais.</p>
-      <p id="agencyInfo" class="mt-1 text-sm text-slate-500 hidden">Imobiliária: <span id="agencyName"></span></p>
+      <p id="agencyInfo" class="mt-3 text-base sm:text-lg font-semibold text-brand-700 hidden"><span id="agencyName"></span></p>
       <div class="mt-6 flex items-center justify-center gap-4">
         <a id="mailtoBtn" href="mailto:contato@seudominio.com" class="px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 soft-shadow">Falar por e‑mail</a>
         <a id="whatsBtn" href="https://wa.me/5500000000000" class="px-6 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50">Falar no WhatsApp</a>
@@ -304,7 +304,7 @@
       if (yearEl) yearEl.textContent = new Date().getFullYear();
 
       // --- MAILTO ---
-      var toParam = getAlias('to', 'email', 'mailto');
+      var toParam = getAlias('email');
       var subject = usp.get('subject');
       var body    = usp.get('body');
       var cc      = usp.get('cc');
@@ -334,7 +334,7 @@
       }
 
       // --- WHATSAPP ---
-      var phoneRaw = getAlias('phone', 'whats', 'whatsapp');
+      var phoneRaw = getAlias('whatsapp');
       var text     = getAlias('text', 'wtext', 'message');
 
       var phoneDigits = (phoneRaw || '').replace(/[^0-9]/g, '');
@@ -356,6 +356,24 @@
         if (agencyNameEl && agencyInfoEl) {
           agencyNameEl.textContent = agency;
           agencyInfoEl.classList.remove('hidden');
+        }
+      }
+
+      // --- HERO IMAGE (optional via URL) ---
+      var heroUrl = getAlias('hero', 'header', 'image', 'header_image', 'capa', 'foto');
+      if (heroUrl) {
+        var heroEl = document.getElementById('heroImage');
+        if (heroEl) {
+          // Clear placeholder and inject responsive image
+          heroEl.innerHTML = '';
+          heroEl.removeAttribute('role');
+          heroEl.removeAttribute('aria-label');
+          heroEl.classList.remove('grid', 'place-items-center', 'bg-slate-200');
+          var img = document.createElement('img');
+          img.src = heroUrl;
+          img.alt = 'Imagem principal da cobertura';
+          img.className = 'w-full h-full object-cover';
+          heroEl.appendChild(img);
         }
       }
     });
