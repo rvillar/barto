@@ -671,64 +671,65 @@
         if (logoFallback) logoFallback.classList.add('hidden');
       }
     }
-  });
-  // --- GALERIA: Lightbox para ampliar imagens ---
-  (function setupLightbox() {
-    var lightbox      = document.getElementById('lightbox');
-    var lightboxImg   = document.getElementById('lightboxImg');
-    var lightboxClose = document.getElementById('lightboxClose');
-    var lightboxBg    = document.getElementById('lightboxBackdrop');
-    if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg) return;
 
-    function openLightbox(fromImg) {
-      try {
-        // Copia src/srcset/sizes/alt da imagem clicada para maximizar no dispositivo
-        var src    = fromImg.getAttribute('src');
-        var srcset = fromImg.getAttribute('srcset');
-        var sizes  = fromImg.getAttribute('sizes');
-        var alt    = fromImg.getAttribute('alt') || '';
+    // --- GALERIA: Lightbox para ampliar imagens ---
+    (function setupLightbox() {
+      var lightbox      = document.getElementById('lightbox');
+      var lightboxImg   = document.getElementById('lightboxImg');
+      var lightboxClose = document.getElementById('lightboxClose');
+      var lightboxBg    = document.getElementById('lightboxBackdrop');
+      if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg) return;
 
-        if (src)    lightboxImg.setAttribute('src', src);
-        if (srcset) lightboxImg.setAttribute('srcset', srcset);
-        // Força usar largura total da viewport
-        lightboxImg.setAttribute('sizes', '100vw');
-        lightboxImg.setAttribute('alt', alt);
+      function openLightbox(fromImg) {
+        try {
+          // Copia src/srcset/sizes/alt da imagem clicada para maximizar no dispositivo
+          var src    = fromImg.getAttribute('src');
+          var srcset = fromImg.getAttribute('srcset');
+          var sizes  = fromImg.getAttribute('sizes');
+          var alt    = fromImg.getAttribute('alt') || '';
 
-        // Mostra o modal
-        lightbox.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-        // Foco no botão fechar para acessibilidade
-        lightboxClose.focus();
-      } catch (e) { /* noop */ }
-    }
+          if (src)    lightboxImg.setAttribute('src', src);
+          if (srcset) lightboxImg.setAttribute('srcset', srcset);
+          // Força usar largura total da viewport
+          lightboxImg.setAttribute('sizes', '100vw');
+          lightboxImg.setAttribute('alt', alt);
 
-    function closeLightbox() {
-      lightbox.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
-      // Limpa atributos pesados
-      lightboxImg.removeAttribute('src');
-      lightboxImg.removeAttribute('srcset');
-      lightboxImg.removeAttribute('sizes');
-    }
-
-    // Fecha ao clicar no X ou no backdrop
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightboxBg.addEventListener('click', closeLightbox);
-
-    // Fecha com ESC
-    document.addEventListener('keydown', function (ev) {
-      if (!lightbox.classList.contains('hidden') && (ev.key === 'Escape' || ev.key === 'Esc')) {
-        closeLightbox();
+          // Mostra o modal
+          lightbox.classList.remove('hidden');
+          document.body.classList.add('overflow-hidden');
+          // Foco no botão fechar para acessibilidade
+          lightboxClose.focus();
+        } catch (e) { /* noop */ }
       }
-    });
 
-    // Ativa o clique nas imagens da galeria
-    var galleryImgs = document.querySelectorAll('#galeria figure img');
-    galleryImgs.forEach(function (img) {
-      img.classList.add('cursor-zoom-in'); // feedback visual
-      img.addEventListener('click', function () { openLightbox(img); });
-    });
-  })();
+      function closeLightbox() {
+        lightbox.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        // Limpa atributos pesados
+        lightboxImg.removeAttribute('src');
+        lightboxImg.removeAttribute('srcset');
+        lightboxImg.removeAttribute('sizes');
+      }
+
+      // Fecha ao clicar no X ou no backdrop
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightboxBg.addEventListener('click', closeLightbox);
+
+      // Fecha com ESC
+      document.addEventListener('keydown', function (ev) {
+        if (!lightbox.classList.contains('hidden') && (ev.key === 'Escape' || ev.key === 'Esc')) {
+          closeLightbox();
+        }
+      });
+
+      // Ativa o clique nas imagens da galeria
+      var galleryImgs = document.querySelectorAll('#galeria figure img');
+      galleryImgs.forEach(function (img) {
+        img.classList.add('cursor-zoom-in'); // feedback visual
+        img.addEventListener('click', function () { openLightbox(img); });
+      });
+    })();
+  });
 </script>
   <!-- Lightbox para ampliar imagens da galeria -->
   <div id="lightbox" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true" aria-labelledby="lightboxLabel">
