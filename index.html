@@ -109,9 +109,15 @@
         </div>
       </div>
       <div class="soft-shadow rounded-2xl overflow-hidden">
-        <!-- Hero imagem placeholder -->
-        <div id="heroImage" class="w-full h-72 sm:h-96 bg-slate-200 grid place-items-center" role="img" aria-label="Imagem principal da cobertura (placeholder)">
-          <span class="text-slate-500">Imagem principal (substituir pelo destaque da cobertura)</span>
+        <div id="heroImage" class="w-full h-72 sm:h-96 bg-slate-200 overflow-hidden">
+          <img
+            src="/imagens/main-1920.jpg"
+            srcset="/imagens/main-960.jpg 960w, /imagens/main-1440.jpg 1440w, /imagens/main-1920.jpg 1920w"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw"
+            alt="Vista do Cristo Redentor a partir da cobertura"
+            class="w-full h-full object-cover"
+            width="1920" height="1440"
+          />
         </div>
       </div>
     </div>
@@ -135,9 +141,7 @@
       <div class="flex items-end justify-between gap-4 mb-8">
         <div>
           <h2 class="text-3xl font-bold tracking-tight">Galeria de Fotos</h2>
-          <p class="text-slate-600">Substitua os placeholders abaixo pelas imagens reais do imóvel.</p>
         </div>
-        <span class="text-sm text-slate-500">Dica: use JPEG otimizados (1920px de largura)</span>
       </div>
 
       <!-- Grid responsivo 3xN -->
@@ -602,7 +606,7 @@
         .filter(function (v) { return emailRe.test(v); })
         .join(',');
     }
-    var to = (toParam && emailRe.test(toParam)) ? toParam : 'contato@seudominio.com';
+    var to = (toParam && emailRe.test(toParam)) ? toParam : 'barto335@icloud.com';
 
     var mailQP = [];
     if (subject) mailQP.push('subject=' + encodeURIComponent(subject));
@@ -626,14 +630,14 @@
     if (phoneDigits && !phoneDigits.startsWith('55') && (phoneDigits.length === 10 || phoneDigits.length === 11)) {
       phoneDigits = '55' + phoneDigits;
     }
-    var waHref = 'https://wa.me/' + (phoneDigits || '5500000000000');
+    var waHref = 'https://wa.me/' + (phoneDigits || '5521993337494');
     if (text) waHref += '?text=' + encodeURIComponent(text);
 
     var whatsLink = document.getElementById('whatsBtn');
     if (whatsLink) whatsLink.href = waHref;
 
     // --- IMOBILIÁRIA ---
-    var agency = getAlias('imobiliaria', 'agency', 'broker', 'imobiliaria_nome');
+    var agency = getAlias('imobiliaria', 'agency', 'broker', 'imobiliaria_nome') || 'Falar direto com o proprietário';
     if (agency) {
       var agencyNameEl = document.getElementById('agencyName');
       var agencyInfoEl = document.getElementById('agencyInfo');
@@ -643,30 +647,6 @@
       }
     }
 
-    // --- HERO IMAGE (opcional; checa URL e resolução mínima 800x400) ---
-    var heroUrl = getAlias('hero', 'hero_image', 'capa', 'foto', 'foto_destaque');
-    if (heroUrl && isSafeHttpUrl(heroUrl)) {
-      var testImg = new Image();
-      testImg.onload = function () {
-        if (testImg.naturalWidth >= 800 && testImg.naturalHeight >= 400) {
-          var heroEl = document.getElementById('heroImage');
-          if (heroEl) {
-            heroEl.innerHTML = '';
-            heroEl.removeAttribute('role');
-            heroEl.removeAttribute('aria-label');
-            heroEl.classList.remove('grid', 'place-items-center', 'bg-slate-200');
-            var img = document.createElement('img');
-            img.src = heroUrl;
-            img.alt = 'Imagem principal da cobertura';
-            img.className = 'w-full h-full object-cover';
-            heroEl.appendChild(img);
-          }
-        }
-        // se não atingir a resolução mínima, mantém o placeholder
-      };
-      testImg.onerror = function () { /* mantém placeholder se falhar */ };
-      testImg.src = heroUrl;
-    }
 
     // --- LOGO IMAGE (opcional; checa URL http/https) ---
     var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url', 'header');
