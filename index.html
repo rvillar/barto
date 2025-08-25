@@ -672,6 +672,77 @@
       }
     }
   });
+  // --- GALERIA: Lightbox para ampliar imagens ---
+  (function setupLightbox() {
+    var lightbox      = document.getElementById('lightbox');
+    var lightboxImg   = document.getElementById('lightboxImg');
+    var lightboxClose = document.getElementById('lightboxClose');
+    var lightboxBg    = document.getElementById('lightboxBackdrop');
+    if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg) return;
+
+    function openLightbox(fromImg) {
+      try {
+        // Copia src/srcset/sizes/alt da imagem clicada para maximizar no dispositivo
+        var src    = fromImg.getAttribute('src');
+        var srcset = fromImg.getAttribute('srcset');
+        var sizes  = fromImg.getAttribute('sizes');
+        var alt    = fromImg.getAttribute('alt') || '';
+
+        if (src)    lightboxImg.setAttribute('src', src);
+        if (srcset) lightboxImg.setAttribute('srcset', srcset);
+        // Força usar largura total da viewport
+        lightboxImg.setAttribute('sizes', '100vw');
+        lightboxImg.setAttribute('alt', alt);
+
+        // Mostra o modal
+        lightbox.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        // Foco no botão fechar para acessibilidade
+        lightboxClose.focus();
+      } catch (e) { /* noop */ }
+    }
+
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      // Limpa atributos pesados
+      lightboxImg.removeAttribute('src');
+      lightboxImg.removeAttribute('srcset');
+      lightboxImg.removeAttribute('sizes');
+    }
+
+    // Fecha ao clicar no X ou no backdrop
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxBg.addEventListener('click', closeLightbox);
+
+    // Fecha com ESC
+    document.addEventListener('keydown', function (ev) {
+      if (!lightbox.classList.contains('hidden') && (ev.key === 'Escape' || ev.key === 'Esc')) {
+        closeLightbox();
+      }
+    });
+
+    // Ativa o clique nas imagens da galeria
+    var galleryImgs = document.querySelectorAll('#galeria figure img');
+    galleryImgs.forEach(function (img) {
+      img.classList.add('cursor-zoom-in'); // feedback visual
+      img.addEventListener('click', function () { openLightbox(img); });
+    });
+  })();
 </script>
+  <!-- Lightbox para ampliar imagens da galeria -->
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true" aria-labelledby="lightboxLabel">
+    <div id="lightboxBackdrop" class="absolute inset-0 bg-black/80"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <img id="lightboxImg" class="max-h-full max-w-full object-contain shadow-2xl" alt="" />
+      <button id="lightboxClose" type="button" aria-label="Fechar" class="absolute top-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/90 hover:bg-white text-slate-800 px-4 py-2 soft-shadow">
+        <!-- Ícone de fechar (X) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+        <span id="lightboxLabel" class="text-sm font-semibold">Fechar</span>
+      </button>
+    </div>
+  </div>
   </body>
   </html>
