@@ -563,108 +563,123 @@
     </div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // util
-      var usp = new URLSearchParams(window.location.search);
-      function getAlias() {
-        for (var i = 0; i < arguments.length; i++) {
-          var v = usp.get(arguments[i]);
-          if (v !== null && v !== '') return v;
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // --- Utils ---
+    var usp = new URLSearchParams(window.location.search);
+
+    function getAlias() {
+      for (var i = 0; i < arguments.length; i++) {
+        var v = usp.get(arguments[i]);
+        if (v !== null && v !== '') return v.trim();
+      }
+      return null;
+    }
+
+    function isSafeHttpUrl(u) {
+      try {
+        var url = new URL(u);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch (e) { return false; }
+    }
+
+    // rodapé: ano
+    var yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // --- MAILTO (aceita to | email | mailto) ---
+    var toParam = getAlias('to', 'email', 'mailto');
+    var subject = usp.get('subject');
+    var body    = usp.get('body');
+    var cc      = usp.get('cc');
+    var bcc     = usp.get('bcc');
+
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    function sanitizeList(val) {
+      if (!val) return '';
+      return val.split(',')
+        .map(function (v) { return v.trim(); })
+        .filter(function (v) { return emailRe.test(v); })
+        .join(',');
+    }
+    var to = (toParam && emailRe.test(toParam)) ? toParam : 'contato@seudominio.com';
+
+    var mailQP = [];
+    if (subject) mailQP.push('subject=' + encodeURIComponent(subject));
+    if (body)    mailQP.push('body=' + encodeURIComponent(body));
+    var ccList  = sanitizeList(cc);
+    var bccList = sanitizeList(bcc);
+    if (ccList)  mailQP.push('cc=' + encodeURIComponent(ccList));
+    if (bccList) mailQP.push('bcc=' + encodeURIComponent(bccList));
+
+    var mailLink = document.getElementById('mailtoBtn');
+    if (mailLink) {
+      mailLink.href = 'mailto:' + to + (mailQP.length ? ('?' + mailQP.join('&')) : '');
+    }
+
+    // --- WHATSAPP (aceita phone | whats | whatsapp) ---
+    var phoneRaw = getAlias('phone', 'whats', 'whatsapp');
+    var text     = getAlias('text', 'wtext', 'message');
+
+    var phoneDigits = (phoneRaw || '').replace(/[^0-9]/g, '');
+    // Se veio número BR sem DDI (10~11 dígitos), prefixa 55
+    if (phoneDigits && !phoneDigits.startsWith('55') && (phoneDigits.length === 10 || phoneDigits.length === 11)) {
+      phoneDigits = '55' + phoneDigits;
+    }
+    var waHref = 'https://wa.me/' + (phoneDigits || '5500000000000');
+    if (text) waHref += '?text=' + encodeURIComponent(text);
+
+    var whatsLink = document.getElementById('whatsBtn');
+    if (whatsLink) whatsLink.href = waHref;
+
+    // --- IMOBILIÁRIA ---
+    var agency = getAlias('imobiliaria', 'agency', 'broker', 'imobiliaria_nome');
+    if (agency) {
+      var agencyNameEl = document.getElementById('agencyName');
+      var agencyInfoEl = document.getElementById('agencyInfo');
+      if (agencyNameEl && agencyInfoEl) {
+        agencyNameEl.textContent = agency;
+        agencyInfoEl.classList.remove('hidden');
+      }
+    }
+
+    // --- HERO IMAGE (opcional; checa URL e resolução mínima 800x400) ---
+    var heroUrl = getAlias('hero', 'hero_image', 'capa', 'foto', 'foto_destaque');
+    if (heroUrl && isSafeHttpUrl(heroUrl)) {
+      var testImg = new Image();
+      testImg.onload = function () {
+        if (testImg.naturalWidth >= 800 && testImg.naturalHeight >= 400) {
+          var heroEl = document.getElementById('heroImage');
+          if (heroEl) {
+            heroEl.innerHTML = '';
+            heroEl.removeAttribute('role');
+            heroEl.removeAttribute('aria-label');
+            heroEl.classList.remove('grid', 'place-items-center', 'bg-slate-200');
+            var img = document.createElement('img');
+            img.src = heroUrl;
+            img.alt = 'Imagem principal da cobertura';
+            img.className = 'w-full h-full object-cover';
+            heroEl.appendChild(img);
+          }
         }
-        return null;
+        // se não atingir a resolução mínima, mantém o placeholder
+      };
+      testImg.onerror = function () { /* mantém placeholder se falhar */ };
+      testImg.src = heroUrl;
+    }
+
+    // --- LOGO IMAGE (opcional; checa URL http/https) ---
+    var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url', 'header');
+    if (logoUrl && isSafeHttpUrl(logoUrl)) {
+      var logoEl = document.getElementById('siteLogo');
+      var logoFallback = document.getElementById('siteLogoFallback');
+      if (logoEl) {
+        logoEl.src = logoUrl;
+        logoEl.classList.remove('hidden');
+        if (logoFallback) logoFallback.classList.add('hidden');
       }
-
-      // rodapé: ano
-      var yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      // --- MAILTO ---
-      var toParam = getAlias('email');
-      var subject = usp.get('subject');
-      var body    = usp.get('body');
-      var cc      = usp.get('cc');
-      var bcc     = usp.get('bcc');
-
-      var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      function sanitizeList(val) {
-        if (!val) return '';
-        return val.split(',')
-          .map(function (v) { return v.trim(); })
-          .filter(function (v) { return emailRe.test(v); })
-          .join(',');
-      }
-      var to = (toParam && emailRe.test(toParam.trim())) ? toParam.trim() : 'contato@seudominio.com';
-
-      var mailQP = [];
-      if (subject) mailQP.push('subject=' + encodeURIComponent(subject));
-      if (body)    mailQP.push('body=' + encodeURIComponent(body));
-      var ccList  = sanitizeList(cc);
-      var bccList = sanitizeList(bcc);
-      if (ccList)  mailQP.push('cc=' + encodeURIComponent(ccList));
-      if (bccList) mailQP.push('bcc=' + encodeURIComponent(bccList));
-
-      var mailLink = document.getElementById('mailtoBtn');
-      if (mailLink) {
-        mailLink.href = 'mailto:' + to + (mailQP.length ? ('?' + mailQP.join('&')) : '');
-      }
-
-      // --- WHATSAPP ---
-      var phoneRaw = getAlias('whatsapp');
-      var text     = getAlias('text', 'wtext', 'message');
-
-      var phoneDigits = (phoneRaw || '').replace(/[^0-9]/g, '');
-      // Se veio número BR sem DDI (10~11 dígitos), prefixa 55
-      if (phoneDigits && !phoneDigits.startsWith('55') && (phoneDigits.length === 10 || phoneDigits.length === 11)) {
-        phoneDigits = '55' + phoneDigits;
-      }
-      var waHref = 'https://wa.me/' + (phoneDigits || '5500000000000');
-      if (text) waHref += '?text=' + encodeURIComponent(text);
-
-      var whatsLink = document.getElementById('whatsBtn');
-      if (whatsLink) whatsLink.href = waHref;
-
-      // --- IMOBILIÁRIA ---
-      var agency = getAlias('imobiliaria', 'agency', 'broker', 'imobiliaria_nome');
-      if (agency) {
-        var agencyNameEl = document.getElementById('agencyName');
-        var agencyInfoEl = document.getElementById('agencyInfo');
-        if (agencyNameEl && agencyInfoEl) {
-          agencyNameEl.textContent = agency;
-          agencyInfoEl.classList.remove('hidden');
-        }
-      }
-
-      // --- HERO IMAGE (optional via URL) ---
-      var heroUrl = getAlias('hero', 'hero_image', 'capa', 'foto', 'foto_destaque');
-      if (heroUrl) {
-        var heroEl = document.getElementById('heroImage');
-        if (heroEl) {
-          // Clear placeholder and inject responsive image
-          heroEl.innerHTML = '';
-          heroEl.removeAttribute('role');
-          heroEl.removeAttribute('aria-label');
-          heroEl.classList.remove('grid', 'place-items-center', 'bg-slate-200');
-          var img = document.createElement('img');
-          img.src = heroUrl;
-          img.alt = 'Imagem principal da cobertura';
-          img.className = 'w-full h-full object-cover';
-          heroEl.appendChild(img);
-        }
-      }
-
-      // --- LOGO IMAGE (optional via URL) ---
-      var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url', 'header');
-      if (logoUrl) {
-        var logoEl = document.getElementById('siteLogo');
-        var logoFallback = document.getElementById('siteLogoFallback');
-        if (logoEl) {
-          logoEl.src = logoUrl;
-          logoEl.classList.remove('hidden');
-          if (logoFallback) logoFallback.classList.add('hidden');
-        }
-      }
-    });
-  </script>
+    }
+  });
+</script>
   </body>
   </html>
