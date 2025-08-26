@@ -734,30 +734,54 @@
 
     // --- GALERIA: Lightbox para ampliar imagens ---
     (function setupLightbox() {
-      var lightbox      = document.getElementById('lightbox');
-      var lightboxImg   = document.getElementById('lightboxImg');
-      var lightboxClose = document.getElementById('lightboxClose');
-      var lightboxBg    = document.getElementById('lightboxBackdrop');
-      if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg) return;
+      var lightbox       = document.getElementById('lightbox');
+      var lightboxImg    = document.getElementById('lightboxImg');
+      var lightboxClose  = document.getElementById('lightboxClose');
+      var lightboxBg     = document.getElementById('lightboxBackdrop');
+      var lightboxPrev   = document.getElementById('lightboxPrev');
+      var lightboxNext   = document.getElementById('lightboxNext');
+      var lightboxCaption= document.getElementById('lightboxCaption');
+
+      if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg || !lightboxPrev || !lightboxNext || !lightboxCaption) return;
+
+      // Coleção de imagens da galeria e índice atual
+      var galleryNodeList = document.querySelectorAll('#galeria figure img');
+      var gallery = Array.prototype.slice.call(galleryNodeList);
+      if (!gallery.length) return;
+      var currentIndex = -1;
+
+      function renderCurrent() {
+        var imgEl = gallery[currentIndex];
+        if (!imgEl) return;
+        // Copia src/srcset/sizes/alt
+        var src    = imgEl.getAttribute('src');
+        var srcset = imgEl.getAttribute('srcset');
+        var sizes  = imgEl.getAttribute('sizes');
+        var alt    = imgEl.getAttribute('alt') || '';
+
+        if (src)    lightboxImg.setAttribute('src', src);
+        else        lightboxImg.removeAttribute('src');
+        if (srcset) lightboxImg.setAttribute('srcset', srcset);
+        else        lightboxImg.removeAttribute('srcset');
+
+        // força largura total da viewport dentro do lightbox
+        lightboxImg.setAttribute('sizes', '100vw');
+        lightboxImg.setAttribute('alt', alt);
+
+        // Atualiza legenda com o conteúdo do figcaption, se houver
+        var figure = imgEl.closest('figure');
+        var cap = figure ? figure.querySelector('figcaption') : null;
+        lightboxCaption.textContent = cap ? cap.textContent : alt;
+      }
 
       function openLightbox(fromImg) {
         try {
-          // Copia src/srcset/sizes/alt da imagem clicada para maximizar no dispositivo
-          var src    = fromImg.getAttribute('src');
-          var srcset = fromImg.getAttribute('srcset');
-          var sizes  = fromImg.getAttribute('sizes');
-          var alt    = fromImg.getAttribute('alt') || '';
-
-          if (src)    lightboxImg.setAttribute('src', src);
-          if (srcset) lightboxImg.setAttribute('srcset', srcset);
-          // Força usar largura total da viewport
-          lightboxImg.setAttribute('sizes', '100vw');
-          lightboxImg.setAttribute('alt', alt);
-
-          // Mostra o modal
+          currentIndex = gallery.indexOf(fromImg);
+          if (currentIndex < 0) currentIndex = 0;
+          renderCurrent();
           lightbox.classList.remove('hidden');
           document.body.classList.add('overflow-hidden');
-          // Foco no botão fechar para acessibilidade
+          // foco acessível
           lightboxClose.focus();
         } catch (e) { /* noop */ }
       }
@@ -765,27 +789,39 @@
       function closeLightbox() {
         lightbox.classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
-        // Limpa atributos pesados
+        // Limpa atributos pesados e estado
         lightboxImg.removeAttribute('src');
         lightboxImg.removeAttribute('srcset');
         lightboxImg.removeAttribute('sizes');
+        currentIndex = -1;
       }
+
+      function go(delta) {
+        if (currentIndex === -1) return;
+        var len = gallery.length;
+        currentIndex = (currentIndex + delta + len) % len;
+        renderCurrent();
+      }
+
+      // Clique nos controles
+      lightboxPrev.addEventListener('click', function() { go(-1); });
+      lightboxNext.addEventListener('click', function() { go(1); });
 
       // Fecha ao clicar no X ou no backdrop
       lightboxClose.addEventListener('click', closeLightbox);
       lightboxBg.addEventListener('click', closeLightbox);
 
-      // Fecha com ESC
+      // Teclado: ESC fecha; setas navegam
       document.addEventListener('keydown', function (ev) {
-        if (!lightbox.classList.contains('hidden') && (ev.key === 'Escape' || ev.key === 'Esc')) {
-          closeLightbox();
-        }
+        if (lightbox.classList.contains('hidden')) return;
+        if (ev.key === 'Escape' || ev.key === 'Esc') closeLightbox();
+        else if (ev.key === 'ArrowLeft') go(-1);
+        else if (ev.key === 'ArrowRight') go(1);
       });
 
-      // Ativa o clique nas imagens da galeria
-      var galleryImgs = document.querySelectorAll('#galeria figure img');
-      galleryImgs.forEach(function (img) {
-        img.classList.add('cursor-zoom-in'); // feedback visual
+      // Ativa o clique nas imagens da galeria + cursor
+      gallery.forEach(function (img) {
+        img.classList.add('cursor-zoom-in');
         img.addEventListener('click', function () { openLightbox(img); });
       });
     })();
@@ -796,14 +832,31 @@
     <div id="lightboxBackdrop" class="absolute inset-0 bg-black/80"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4">
       <img id="lightboxImg" class="max-h-full max-w-full object-contain shadow-2xl" alt="" />
+    
+      <!-- Botão Fechar -->
       <button id="lightboxClose" type="button" aria-label="Fechar" class="absolute top-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/90 hover:bg-white text-slate-800 px-4 py-2 soft-shadow">
-        <!-- Ícone de fechar (X) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18"/>
         </svg>
         <span id="lightboxLabel" class="text-sm font-semibold">Fechar</span>
       </button>
-    </div>
-  </div>
+    
+      <!-- Botão Anterior -->
+      <button id="lightboxPrev" type="button" aria-label="Anterior" class="absolute left-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-slate-800 p-3 soft-shadow">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+    
+      <!-- Botão Próxima -->
+      <button id="lightboxNext" type="button" aria-label="Próxima" class="absolute right-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-slate-800 p-3 soft-shadow">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    
+      <!-- Legenda -->
+      <div id="lightboxCaption" class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-sm sm:text-base px-4 py-3 text-center pointer-events-none"></div>
+    </div>  </div>
   </body>
   </html>
