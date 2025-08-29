@@ -780,7 +780,7 @@
         if (!lightbox || !lightboxImg || !lightboxClose || !lightboxBg || !lightboxPrev || !lightboxNext || !lightboxCaption) return;
 
         // Coleção de imagens da galeria e índice atual
-        var galleryNodeList = document.querySelectorAll('#galeria figure img');
+        var galleryNodeList = document.querySelectorAll('#galeria figure img, #heroImage img');
         var gallery = Array.prototype.slice.call(galleryNodeList);
         if (!gallery.length) return;
         var currentIndex = -1;
