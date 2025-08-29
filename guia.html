@@ -7,6 +7,7 @@
   <meta name="description" content="Como passar parâmetros na URL para configurar e-mail, WhatsApp, imobiliária e logomarca no site barto335.vercel.app." />
   <style>
     :root { --bg:#0b1020; --card:#0f172a; --muted:#94a3b8; --accent:#60a5fa; --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444; }
+    *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#0b1020;color:#e2e8f0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
     a{color:#93c5fd;text-decoration:none} a:hover{text-decoration:underline}
     .wrap{max-width:1000px;margin:auto;padding:28px}
@@ -16,9 +17,9 @@
     p{color:#cbd5e1;margin:8px 0}
     code,kbd{background:#0a1228;border:1px solid #1e293b;border-radius:6px;padding:2px 6px;color:#e5e7eb;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     pre{background:#0a1228;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto}
-    .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:33px;margin:18px 0}
+    .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:33px;margin:18px 0;overflow:hidden}
     .grid{display:grid;gap:12px}
-    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
+    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
     .tag{display:inline-block;border:1px solid #1e293b;background:#0a1228;color:#cbd5e1;padding:2px 8px;border-radius:999px;margin:2px 4px 0 0;font-size:12px}
     table{width:100%;border-collapse:separate;border-spacing:0 8px}
     th,td{padding:10px 12px;vertical-align:top}
@@ -30,11 +31,15 @@
     .pill{display:inline-block;background:#0a1228;border:1px solid #1e293b;color:#e2e8f0;padding:8px 10px;border-radius:12px}
     .btn{display:inline-flex;align-items:center;gap:8px;background:#1d4ed8;border:1px solid #1e40af;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600}
     .btn:hover{background:#1e40af}
-    .input, select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #1e293b;background:#0a1228;color:#e2e8f0}
+    .input, select{width:100%;max-width:100%;display:block;padding:10px 12px;border-radius:10px;border:1px solid #1e293b;background:#0a1228;color:#e2e8f0}
     .row{display:flex;flex-direction:column;gap:6px}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     .ok{color:var(--ok)} .warn{color:var(--warn)} .danger{color:var(--danger)}
     .small{font-size:13px;color:#93a4bd}
+
+    @media(min-width:768px){
+      .row{display:grid;grid-template-columns:180px 1fr;align-items:center;gap:12px}
+    }
   </style>
 </head>
 <body>
@@ -259,6 +264,3 @@
   </script>
 </body>
 </html>
-    @media(min-width:768px){
-      .row{display:grid;grid-template-columns:180px 1fr;align-items:center;gap:12px}
-    }
