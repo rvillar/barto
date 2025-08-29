@@ -16,9 +16,9 @@
     p{color:#cbd5e1;margin:8px 0}
     code,kbd{background:#0a1228;border:1px solid #1e293b;border-radius:6px;padding:2px 6px;color:#e5e7eb;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     pre{background:#0a1228;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto}
-    .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:18px;margin:18px 0}
+    .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:33px;margin:18px 0}
     .grid{display:grid;gap:12px}
-    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
     .tag{display:inline-block;border:1px solid #1e293b;background:#0a1228;color:#cbd5e1;padding:2px 8px;border-radius:999px;margin:2px 4px 0 0;font-size:12px}
     table{width:100%;border-collapse:separate;border-spacing:0 8px}
     th,td{padding:10px 12px;vertical-align:top}
@@ -44,12 +44,12 @@
 
     <div class="card">
       <h2>URL base</h2>
-      <p>Estrutura geral: <code>https://barto335.vercel.app/?chave1=valor1&amp;chave2=valor2</code></p>
-      <p class="note">Dica: valores com espaços/acentos devem ser <em>URL-encoded</em> (ex.: espaço → <code>%20</code>).</p>
+      <p>Estrutura geral: <pre><code class="mono">https://barto335.vercel.app/?email=seuemail@provedor.com.br&imobiliaria=nome&whatsapp=+5521999999999&logo=https://www.lopes.com.br/assets/svgs/default_logo.svg</code></pre></p>
+      <p class="note">Dica: Use a ferramenta abaixo para montar o seu link.</p>
     </div>
 
     <div class="card">
-      <h2>Parâmetros disponíveis</h2>
+      <h2>Parâmetros disponíveis e opcionais</h2>
 
       <h3>1) E-mail (botão “Falar por e-mail”)</h3>
       <table>
@@ -72,18 +72,6 @@
             <td><code>body</code></td>
             <td>—</td>
             <td>Quebras de linha com <code>%0A</code>.</td>
-          </tr>
-          <tr>
-            <td>Cópia</td>
-            <td><code>cc</code></td>
-            <td>—</td>
-            <td>Vários e-mails separados por vírgula; e-mails inválidos são ignorados.</td>
-          </tr>
-          <tr>
-            <td>Cópia oculta</td>
-            <td><code>bcc</code></td>
-            <td>—</td>
-            <td>Mesmas regras do <code>cc</code>.</td>
           </tr>
         </tbody>
       </table>
@@ -149,8 +137,11 @@
     <div class="card">
       <h2>Exemplos</h2>
 
+      <h3>Exemplo completo simples</h3>
+      <pre><code class="mono">https://barto335.vercel.app/?email=seuemail@provedor.com.br&amp;imobiliaria=nome&amp;whatsapp=+5521999999999&amp;logo=https://www.lopes.com.br/assets/svgs/default_logo.svg</code></pre>
+
       <h3>E-mail completo</h3>
-      <pre><code class="mono">https://barto335.vercel.app/?to=contato@exemplo.com&amp;subject=Interesse%20na%20cobertura&amp;body=Ol%C3%A1%2C%20tenho%20interesse.%0APodemos%20agendar%3F&amp;cc=parceiro@ex.com,corretor@ex.com&amp;bcc=gestor@ex.com</code></pre>
+      <pre><code class="mono">https://barto335.vercel.app/?to=contato@exemplo.com&amp;subject=Interesse%20na%20cobertura&amp;body=Ol%C3%A1%2C%20tenho%20interesse.%0APodemos%20agendar%3F</code></pre>
 
       <h3>WhatsApp (BR com DDI)</h3>
       <pre><code class="mono">https://barto335.vercel.app/?phone=5521999999999&amp;text=Ol%C3%A1%2C%20tenho%20interesse%20no%20im%C3%B3vel.</code></pre>
@@ -164,16 +155,12 @@
       <h3>Logomarca</h3>
       <pre><code class="mono">https://barto335.vercel.app/?logo=https://www.lopes.com.br/assets/svgs/default_logo.svg&amp;logo_alt=Lopes&amp;logo_size=64</code></pre>
 
-      <h3>Exemplo completo (como no seu pedido)</h3>
-      <pre><code class="mono">https://barto335.vercel.app/?email=seuemail@provedor.com.br&amp;imobiliaria=nome&amp;whatsapp=+5521999999999&amp;logo=https://www.lopes.com.br/assets/svgs/default_logo.svg</code></pre>
-      <p class="small">Observação: <code>email</code> é alias de <code>to</code>; <code>whatsapp</code> é alias de <code>phone</code>. O “+” no telefone é opcional (é removido automaticamente).</p>
     </div>
 
     <div class="card">
       <h2>Boas práticas</h2>
       <ul>
         <li>Use <strong>URL-encode</strong> em <code>subject</code>, <code>body</code> e <code>text</code>.</li>
-        <li>Em <code>cc</code>/<code>bcc</code>, separe e-mails por vírgula; endereços inválidos são descartados.</li>
         <li>No WhatsApp, só dígitos são utilizados; para números BR de 10–11 dígitos sem DDI, o site adiciona <code>55</code>.</li>
         <li>Para a <strong>logo</strong>, prefira URLs <code>https</code> e ajuste <code>logo_size</code> conforme necessário (24–160 px).</li>
       </ul>
@@ -184,18 +171,15 @@
       <p>Preencha os campos e clique em “Copiar URL”.</p>
       <div class="grid cols-2" id="builder">
         <div class="row"><label for="b_to">E-mail (to/email/mailto)</label><input class="input" id="b_to" placeholder="contato@exemplo.com"></div>
-        <div class="row"><label for="b_subject">Assunto (subject)</label><input class="input" id="b_subject" placeholder="Interesse no imóvel"></div>
-        <div class="row"><label for="b_body">Corpo (body)</label><input class="input" id="b_body" placeholder="Olá, tenho interesse. Podemos agendar?"></div>
-        <div class="row"><label for="b_cc">CC (cc)</label><input class="input" id="b_cc" placeholder="parceiro@ex.com,corretor@ex.com"></div>
-        <div class="row"><label for="b_bcc">BCC (bcc)</label><input class="input" id="b_bcc" placeholder="gestor@ex.com"></div>
+        <div class="row"><label for="b_subject">E-mail Assunto (subject)</label><input class="input" id="b_subject" placeholder="Interesse no imóvel"></div>
+        <div class="row"><label for="b_body">E-mail Corpo (body)</label><input class="input" id="b_body" placeholder="Olá, tenho interesse. Podemos agendar?"></div>
 
-        <div class="row"><label for="b_phone">WhatsApp (phone/whats/whatsapp)</label><input class="input" id="b_phone" placeholder="+55 21 99999-9999"></div>
-        <div class="row"><label for="b_text">Mensagem (text/wtext/message)</label><input class="input" id="b_text" placeholder="Olá, tenho interesse no imóvel."></div>
+        <div class="row"><label for="b_phone">WhatsApp (phone)</label><input class="input" id="b_phone" placeholder="+55 21 99999-9999"></div>
+        <div class="row"><label for="b_text">WhatsApp Mensagem (text)</label><input class="input" id="b_text" placeholder="Olá, tenho interesse no imóvel."></div>
 
         <div class="row"><label for="b_imob">Imobiliária (imobiliaria)</label><input class="input" id="b_imob" placeholder="Imobi Leblon"></div>
 
         <div class="row"><label for="b_logo">Logo URL (logo)</label><input class="input" id="b_logo" placeholder="https://dominio/logo.svg"></div>
-        <div class="row"><label for="b_logoalt">Logo ALT (logo_alt)</label><input class="input" id="b_logoalt" placeholder="Nome da marca"></div>
         <div class="row"><label for="b_logosize">Logo Size px (logo_size)</label><input class="input" id="b_logosize" type="number" min="24" max="160" placeholder="64"></div>
       </div>
 
@@ -216,7 +200,7 @@
     // Montador de URL
     (function() {
       const base = "https://barto335.vercel.app/";
-      const ids = ["b_to","b_subject","b_body","b_cc","b_bcc","b_phone","b_text","b_imob","b_logo","b_logoalt","b_logosize"];
+      const ids = ["b_to","b_subject","b_body","b_phone","b_text","b_imob","b_logo","b_logosize"];
       const m = {}; ids.forEach(id => m[id] = document.getElementById(id));
       const out = document.getElementById("b_out");
       const openBtn = document.getElementById("b_open");
@@ -235,8 +219,6 @@
         if(m.b_to.value) qp.set("to", m.b_to.value.trim());
         if(m.b_subject.value) qp.set("subject", m.b_subject.value);
         if(m.b_body.value) qp.set("body", m.b_body.value);
-        if(m.b_cc.value) qp.set("cc", sanitizeEmails(m.b_cc.value));
-        if(m.b_bcc.value) qp.set("bcc", sanitizeEmails(m.b_bcc.value));
 
         // WhatsApp (use "phone" como canônico; aceita +, () e espaços)
         const phoneRaw = m.b_phone.value.trim();
@@ -250,7 +232,6 @@
 
         // Logo
         if(m.b_logo.value) qp.set("logo", m.b_logo.value.trim());
-        if(m.b_logoalt.value) qp.set("logo_alt", m.b_logoalt.value);
         if(m.b_logosize.value){
           const n = Math.max(24, Math.min(160, parseInt(m.b_logosize.value,10)||0));
           if(n) qp.set("logo_size", String(n));
