@@ -19,7 +19,7 @@
     pre{background:#0a1228;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto}
     .card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:33px;margin:18px 0;overflow:hidden}
     .grid{display:grid;gap:12px}
-    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(520px,1fr))}
     .tag{display:inline-block;border:1px solid #1e293b;background:#0a1228;color:#cbd5e1;padding:2px 8px;border-radius:999px;margin:2px 4px 0 0;font-size:12px}
     table{width:100%;border-collapse:separate;border-spacing:0 8px}
     th,td{padding:10px 12px;vertical-align:top}
@@ -33,6 +33,8 @@
     .btn:hover{background:#1e40af}
     .input, select{width:100%;max-width:100%;display:block;padding:10px 12px;border-radius:10px;border:1px solid #1e293b;background:#0a1228;color:#e2e8f0}
     .row{display:flex;flex-direction:column;gap:6px}
+    .row{min-width:0}
+    .input, select{min-width:0}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     .ok{color:var(--ok)} .warn{color:var(--warn)} .danger{color:var(--danger)}
     .small{font-size:13px;color:#93a4bd}
