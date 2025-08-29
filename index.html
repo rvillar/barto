@@ -755,16 +755,38 @@
       }
 
 
-      // --- LOGO IMAGE (opcional; checa URL http/https) ---
+      // --- LOGO IMAGE (opcional; checa URL http/https + alt/size via parâmetros) ---
       var logoUrl = getAlias('logo', 'logomarca', 'brand', 'logo_url', 'header');
+      var logoAlt = getAlias('logo_alt', 'logoalt', 'alt');
+      var logoSizeRaw = getAlias('logo_size', 'logosize', 'size'); // px (ex.: ?logo_size=64)
+      var logoSize = null;
+      if (logoSizeRaw) {
+        var n = parseInt(logoSizeRaw, 10);
+        if (!isNaN(n)) {
+          // limita entre 24 e 160 px
+          logoSize = Math.max(24, Math.min(160, n));
+        }
+      }
+
       if (logoUrl && isSafeHttpUrl(logoUrl)) {
         var logoEl = document.getElementById('siteLogo');
         var logoFallback = document.getElementById('siteLogoFallback');
         if (logoEl) {
           logoEl.src = logoUrl;
+          if (logoAlt) logoEl.alt = logoAlt;
+          if (logoSize) {
+            // remove tamanhos tailwind fixos e aplica estilo inline
+            logoEl.classList.remove('h-12','w-12');
+            logoEl.style.width = logoSize + 'px';
+            logoEl.style.height = logoSize + 'px';
+          }
           logoEl.classList.remove('hidden');
           if (logoFallback) logoFallback.classList.add('hidden');
         }
+      } else if (logoAlt) {
+        // mesmo sem URL, atualiza alt do fallback para acessibilidade
+        var fallback = document.getElementById('siteLogoFallback');
+        if (fallback) fallback.setAttribute('aria-label', logoAlt);
       }
 
       // --- GALERIA: Lightbox para ampliar imagens ---
