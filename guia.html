@@ -31,7 +31,7 @@
     .btn{display:inline-flex;align-items:center;gap:8px;background:#1d4ed8;border:1px solid #1e40af;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600}
     .btn:hover{background:#1e40af}
     .input, select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #1e293b;background:#0a1228;color:#e2e8f0}
-    .row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center}
+    .row{display:flex;flex-direction:column;gap:6px}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     .ok{color:var(--ok)} .warn{color:var(--warn)} .danger{color:var(--danger)}
     .small{font-size:13px;color:#93a4bd}
@@ -259,3 +259,6 @@
   </script>
 </body>
 </html>
+    @media(min-width:768px){
+      .row{display:grid;grid-template-columns:180px 1fr;align-items:center;gap:12px}
+    }
