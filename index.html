@@ -132,7 +132,7 @@
         <p class="mt-4 text-lg text-slate-600">224 m² • 4 quartos • 3 suítes • lavabo • 3 varandas • piscina •
           churrasqueira • dependências completa • 2 vagas de garagem</p>
           <div class="mt-6 soft-shadow rounded-2xl overflow-hidden hero-border">
-            <div id="heroImage" class="w-full h-72 sm:h-96 bg-slate-200 overflow-hidden">
+            <div id="heroImage" class="w-full h-72 sm:h-96 bg-slate-200 overflow-hidden cursor-zoom-in" role="button" tabindex="0" aria-label="Ampliar imagem principal">
               <img src="/imagens/main-1920.jpg"
                 srcset="/imagens/main-960.jpg 960w, /imagens/main-1440.jpg 1440w, /imagens/main-1920.jpg 1920w"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw"
@@ -882,6 +882,22 @@
           img.classList.add('cursor-zoom-in');
           img.addEventListener('click', function () { openLightbox(img); });
         });
+
+        // Hero: também permite clique no container e teclado
+        var heroContainer = document.getElementById('heroImage');
+        if (heroContainer) {
+          heroContainer.addEventListener('click', function (ev) {
+            var img = heroContainer.querySelector('img');
+            if (img) openLightbox(img);
+          });
+          heroContainer.addEventListener('keydown', function (ev) {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              var img = heroContainer.querySelector('img');
+              if (img) openLightbox(img);
+            }
+          });
+        }
       })();
     });
   </script>
