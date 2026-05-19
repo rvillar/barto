@@ -13,6 +13,11 @@
     content="Duplex com piscina, churrasqueira, 4 quartos (3 suítes), 2 vagas, lazer completo. Veja fotos, vídeo e localização." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
+  <meta property="og:image" content="/imagens/main-1920.jpg" />
+  <meta property="og:image:alt" content="Vista do Cristo Redentor a partir da cobertura" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="/imagens/main-1920.jpg" />
+  <meta name="twitter:image:alt" content="Vista do Cristo Redentor a partir da cobertura" />
 
   <!-- Tailwind CSS via CDN (produção simples) -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -93,6 +98,67 @@
     .hero-border {
       border: 2px solid rgb(4, 32, 5);
     }
+
+    @keyframes suggestionBgShift {
+      0%, 100% {
+        background-color: #ffffff;
+      }
+      50% {
+        background-color: #dbeafe;
+      }
+    }
+
+    @keyframes suggestionBgShiftActive {
+      0%, 100% {
+        background-color: #2563eb;
+      }
+      50% {
+        background-color: #1d4ed8;
+      }
+    }
+
+    .suggestion-animate {
+      animation: suggestionBgShift 2.8s ease-in-out infinite;
+    }
+
+    .suggestion-animate[aria-pressed="true"] {
+      animation: suggestionBgShiftActive 2.8s ease-in-out infinite;
+    }
+
+    @keyframes floatingDecorPulse {
+      0%, 100% {
+        background-color: #1d4ed8;
+        box-shadow: 0 10px 22px rgba(29, 78, 216, 0.32);
+      }
+      50% {
+        background-color: #2563eb;
+        box-shadow: 0 14px 28px rgba(37, 99, 235, 0.42);
+      }
+    }
+
+    @keyframes floatingDecorLift {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+
+    .floating-suggestion-btn {
+      animation: floatingDecorPulse 2.8s ease-in-out infinite, floatingDecorLift 2.8s ease-in-out infinite;
+    }
+
+    .floating-suggestion-btn:hover {
+      filter: brightness(1.03);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .suggestion-animate,
+      .floating-suggestion-btn {
+        animation: none;
+      }
+    }
   </style>
 </head>
 
@@ -155,7 +221,7 @@
     <div class="mt-6">
       <div class="p-8 bg-white rounded-2xl border-2 border-brand-600 soft-shadow text-center">
         <h3 class="text-2xl font-bold text-slate-900">Valor do Imóvel</h3>
-        <p class="mt-2 text-4xl font-extrabold text-brand-700">R$ 5.150.000</p>
+        <p class="mt-2 text-4xl font-extrabold text-brand-700">R$ 5.050.000</p>
         <div class="mt-4 text-slate-600 text-sm">
           <p>IPTU: R$ 15.703,05 / ano</p>
           <p>Condomínio: R$ 4.232,40 / mês</p>
@@ -166,9 +232,18 @@
   <!-- Galeria de Fotos -->
   <section id="galeria" class="py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between gap-4 mb-8">
+      <div class="mb-8">
         <div>
           <h2 class="text-3xl font-bold tracking-tight">Galeria de Fotos</h2>
+        </div>
+        <div class="mt-4">
+          <div id="galleryVersionToggle" class="flex w-full rounded-2xl border-2 border-brand-600 overflow-hidden soft-shadow">
+            <button id="galleryVersionOriginal" type="button" aria-pressed="true"
+              class="flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-r border-brand-600">Original</button>
+            <button id="galleryVersionNew" type="button" aria-pressed="false"
+              class="suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-l border-brand-600">Sugestão</button>
+          </div>
+          <p id="galleryVersionHint" class="mt-2 text-xs text-slate-500">Troque entre as versões das fotos.</p>
         </div>
       </div>
 
@@ -183,8 +258,8 @@
             para o Cristo</figcaption>
         </figure>
         <figure class="relative aspect-[4/3] rounded-xl overflow-hidden">
-          <img src="/imagens/doisirmaoes-1920.jpg"
-            srcset="/imagens/doisirmaoes-960.jpg 960w, /imagens/doisirmaoes-1440.jpg 1440w, /imagens/doisirmaoes-1920.jpg 1920w"
+          <img src="/imagens/doisirmaos-1920.jpg"
+            srcset="/imagens/doisirmaos-960.jpg 960w, /imagens/doisirmaos-1440.jpg 1440w, /imagens/doisirmaos-1920.jpg 1920w"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="Vista para os Dois Irmãos"
             loading="lazy" decoding="async" class="w-full h-full object-cover" width="1920" height="1440" />
           <figcaption class="absolute top-0 left-0 right-0 bg-black/50 text-white text-sm sm:text-base px-3 py-2">Vista
@@ -201,14 +276,6 @@
         <figure class="relative aspect-[4/3] rounded-xl overflow-hidden">
           <img src="/imagens/piscina-1920.jpg"
             srcset="/imagens/piscina-960.jpg 960w, /imagens/piscina-1440.jpg 1440w, /imagens/piscina-1920.jpg 1920w"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="Piscina privativa na cobertura"
-            loading="lazy" decoding="async" class="w-full h-full object-cover" width="1920" height="1440" />
-          <figcaption class="absolute top-0 left-0 right-0 bg-black/50 text-white text-sm sm:text-base px-3 py-2">
-            Piscina privativa na cobertura</figcaption>
-        </figure>
-        <figure class="relative aspect-[4/3] rounded-xl overflow-hidden">
-          <img src="/imagens/piscina1-1920.jpg"
-            srcset="/imagens/piscina1-960.jpg 960w, /imagens/piscina1-1440.jpg 1440w, /imagens/piscina1-1920.jpg 1920w"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="Piscina privativa na cobertura"
             loading="lazy" decoding="async" class="w-full h-full object-cover" width="1920" height="1440" />
           <figcaption class="absolute top-0 left-0 right-0 bg-black/50 text-white text-sm sm:text-base px-3 py-2">
@@ -327,13 +394,6 @@
             decoding="async" class="w-full h-full object-cover" width="1920" height="1440" />
           <figcaption class="absolute top-0 left-0 right-0 bg-black/50 text-white text-sm sm:text-base px-3 py-2">Varanda
             da Suíte #3</figcaption>
-        </figure>
-        <figure class="relative aspect-[4/3] rounded-xl overflow-hidden">
-          <img src="/imagens/suite3vista-1920.jpg"
-            srcset="/imagens/suite3vista-960.jpg 960w, /imagens/suite3vista-1440.jpg 1440w, /imagens/suite3vista-1920.jpg 1920w"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="Vista Suíte #3" loading="lazy"
-            decoding="async" class="w-full h-full object-cover" width="1920" height="1440" />
-          <figcaption class="absolute top-0 left-0 right-0 bg-black/50 text-white text-sm sm:text-base px-3 py-2">Vista da Suíte #3</figcaption>
         </figure>
         <figure class="relative aspect-[4/3] rounded-xl overflow-hidden">
           <img src="/imagens/piscinasala-1920.jpg"
@@ -680,6 +740,13 @@
     </div>
   </section>
 
+  <button id="floatingSuggestionBtn" type="button" aria-label="Alternar entre fotos originais e sugestão de decoração" aria-pressed="false"
+    class="floating-suggestion-btn fixed bottom-4 right-4 z-50 rounded-2xl px-4 py-3 text-left text-white soft-shadow max-w-[18rem]">
+    <span class="block text-xs uppercase tracking-[0.08em] opacity-90">Fotos</span>
+    <span class="block text-sm sm:text-base font-semibold leading-tight">Veja a sugestão de decoração</span>
+    <span id="floatingSuggestionMode" class="mt-1 block text-[11px] opacity-90">Modo atual: Original</span>
+  </button>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -789,6 +856,196 @@
         var fallback = document.getElementById('siteLogoFallback');
         if (fallback) fallback.setAttribute('aria-label', logoAlt);
       }
+
+      // --- GALERIA: alternância entre versão original e versão "new" ---
+      (function setupGalleryVersionToggle() {
+        var toggleRoot = document.getElementById('galleryVersionToggle');
+        var btnOriginal = document.getElementById('galleryVersionOriginal');
+        var btnNew = document.getElementById('galleryVersionNew');
+        var hint = document.getElementById('galleryVersionHint');
+        var floatingSuggestionBtn = document.getElementById('floatingSuggestionBtn');
+        var floatingSuggestionMode = document.getElementById('floatingSuggestionMode');
+        if (!toggleRoot || !btnOriginal || !btnNew) return;
+
+        var imageNodeList = document.querySelectorAll('#galeria figure img, #heroImage img');
+        var images = Array.prototype.slice.call(imageNodeList);
+        if (!images.length) return;
+
+        var newImageByKey = {
+          main: 'main.png',
+          cristo: 'cristo.png',
+          doisirmaos: 'doisirmaos.png',
+          mar: 'mar.png',
+          piscina: 'piscina.jpg',
+          piscina2: 'piscina2.png',
+          churrasqueira1: 'churrasqueira1.png',
+          churrasqueira2: 'churrasqueira2.png',
+          sala: 'sala1.png',
+          sala2: 'sala2.png',
+          varandasocial1: 'varandasocial1.png',
+          varandasocial2: 'varandasocial2.png',
+          lavabo: 'lavabo.png',
+          suite1: 'suite1.png',
+          suite2: 'suite2.png',
+          suite3: 'suite3.png',
+          suite3banheiro: 'suite3banheiro.png',
+          suite3closet: 'suite3closet.png',
+          suite3varanda: 'suite3varanda.png',
+          piscinasala: 'piscinasala.png',
+          cozinha: 'cozinha.png',
+          playground: 'playground.png'
+        };
+        var alwaysNewKeys = {
+          cristo: true,
+          doisirmaos: true,
+          mar: true,
+          playground: true
+        };
+        var socialImageOriginal = '/imagens/main-1920.jpg';
+        var socialImageNew = '/new/main-1920.png';
+        var socialImageAlt = 'Vista do Cristo Redentor a partir da cobertura';
+        var currentVersion = 'original';
+        var supportsWebP = (function () {
+          try {
+            var canvas = document.createElement('canvas');
+            if (!canvas.getContext) return false;
+            return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+          } catch (e) {
+            return false;
+          }
+        })();
+
+        function extractKey(src) {
+          if (!src) return '';
+          var cleanSrc = src.split('?')[0];
+          var oldMatch = cleanSrc.match(/\/imagens\/([a-z0-9_-]+)-\d+\.(?:jpg|jpeg|png|webp)$/i);
+          if (oldMatch && oldMatch[1]) return oldMatch[1];
+          var newMatch = cleanSrc.match(/\/new\/([a-z0-9_-]+)\.(?:jpg|jpeg|png|webp)$/i);
+          if (newMatch && newMatch[1]) return newMatch[1];
+          return '';
+        }
+
+        images.forEach(function (img) {
+          var originalSrc = img.getAttribute('src') || '';
+          var originalSrcset = img.getAttribute('srcset') || '';
+          var originalSizes = img.getAttribute('sizes') || '';
+          img.setAttribute('data-original-src', originalSrc);
+          img.setAttribute('data-original-srcset', originalSrcset);
+          img.setAttribute('data-original-sizes', originalSizes);
+          img.setAttribute('data-image-key', extractKey(originalSrc));
+        });
+
+        function setButtonState(activeVersion) {
+          if (activeVersion === 'new') {
+            btnOriginal.className = 'flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-r border-brand-600';
+            btnOriginal.setAttribute('aria-pressed', 'false');
+            btnNew.className = 'suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-l border-brand-600';
+            btnNew.setAttribute('aria-pressed', 'true');
+            if (floatingSuggestionMode) floatingSuggestionMode.textContent = 'Modo atual: Sugestão';
+            if (floatingSuggestionBtn) floatingSuggestionBtn.setAttribute('aria-pressed', 'true');
+          } else {
+            btnOriginal.className = 'flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-r border-brand-600';
+            btnOriginal.setAttribute('aria-pressed', 'true');
+            btnNew.className = 'suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-l border-brand-600';
+            btnNew.setAttribute('aria-pressed', 'false');
+            if (floatingSuggestionMode) floatingSuggestionMode.textContent = 'Modo atual: Original';
+            if (floatingSuggestionBtn) floatingSuggestionBtn.setAttribute('aria-pressed', 'false');
+          }
+        }
+
+        function buildNewSources(newFile) {
+          if (!newFile) return null;
+          var dotIndex = newFile.lastIndexOf('.');
+          if (dotIndex <= 0) return null;
+          var base = newFile.slice(0, dotIndex);
+          var ext = newFile.slice(dotIndex + 1);
+          var selectedExt = supportsWebP ? 'webp' : ext;
+          return {
+            src: '/new/' + base + '-1920.' + selectedExt,
+            srcset: '/new/' + base + '-960.' + selectedExt + ' 960w, /new/' + base + '-1440.' + selectedExt + ' 1440w, /new/' + base + '-1920.' + selectedExt + ' 1920w',
+            sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+          };
+        }
+
+        function setSocialPreview(version) {
+          var socialImage = version === 'new' ? socialImageNew : socialImageOriginal;
+
+          var ogImage = document.querySelector('meta[property="og:image"]');
+          var ogImageAlt = document.querySelector('meta[property="og:image:alt"]');
+          var twImage = document.querySelector('meta[name="twitter:image"]');
+          var twImageAlt = document.querySelector('meta[name="twitter:image:alt"]');
+          if (ogImage) ogImage.setAttribute('content', socialImage);
+          if (ogImageAlt) ogImageAlt.setAttribute('content', socialImageAlt);
+          if (twImage) twImage.setAttribute('content', socialImage);
+          if (twImageAlt) twImageAlt.setAttribute('content', socialImageAlt);
+        }
+
+        function syncVersionInUrl(version) {
+          try {
+            var url = new URL(window.location.href);
+            if (version === 'new') url.searchParams.set('fotos', 'new');
+            else url.searchParams.delete('fotos');
+            window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+          } catch (e) { /* noop */ }
+        }
+
+        function applyVersion(version) {
+          currentVersion = version;
+
+          images.forEach(function (img) {
+            var imageKey = img.getAttribute('data-image-key') || '';
+            var newFile = newImageByKey[imageKey];
+            var shouldUseNew = !!newFile && (version === 'new' || !!alwaysNewKeys[imageKey]);
+
+            if (shouldUseNew) {
+              var responsiveNewSources = buildNewSources(newFile);
+              if (responsiveNewSources) {
+                img.setAttribute('src', responsiveNewSources.src);
+                img.setAttribute('srcset', responsiveNewSources.srcset);
+                img.setAttribute('sizes', responsiveNewSources.sizes);
+              } else {
+                img.setAttribute('src', '/new/' + newFile);
+                img.removeAttribute('srcset');
+                img.setAttribute('sizes', '100vw');
+              }
+              return;
+            }
+
+            var restoreSrc = img.getAttribute('data-original-src') || '';
+            var restoreSrcset = img.getAttribute('data-original-srcset') || '';
+            var restoreSizes = img.getAttribute('data-original-sizes') || '';
+
+            if (restoreSrc) img.setAttribute('src', restoreSrc);
+            if (restoreSrcset) img.setAttribute('srcset', restoreSrcset);
+            else img.removeAttribute('srcset');
+            if (restoreSizes) img.setAttribute('sizes', restoreSizes);
+            else img.removeAttribute('sizes');
+          });
+
+          setButtonState(version);
+          setSocialPreview(version);
+          syncVersionInUrl(version);
+          if (hint) {
+            hint.textContent = 'Troque entre as versões das fotos.';
+          }
+
+          try { window.localStorage.setItem('galleryVersion', version); } catch (e) { /* noop */ }
+        }
+
+        btnOriginal.addEventListener('click', function () { applyVersion('original'); });
+        btnNew.addEventListener('click', function () { applyVersion('new'); });
+        if (floatingSuggestionBtn) {
+          floatingSuggestionBtn.addEventListener('click', function () {
+            applyVersion(currentVersion === 'new' ? 'original' : 'new');
+          });
+        }
+
+        var queryVersion = (usp.get('fotos') || '').toLowerCase();
+        var storedVersion = '';
+        try { storedVersion = (window.localStorage.getItem('galleryVersion') || '').toLowerCase(); } catch (e) { /* noop */ }
+        var initialVersion = (queryVersion === 'new' || storedVersion === 'new') ? 'new' : 'original';
+        applyVersion(initialVersion);
+      })();
 
       // --- GALERIA: Lightbox para ampliar imagens ---
       (function setupLightbox() {
