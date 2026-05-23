@@ -740,7 +740,7 @@
     </div>
   </section>
 
-  <button id="floatingSuggestionBtn" type="button" aria-label="Alternar entre fotos originais e sugestão de decoração" aria-pressed="false"
+  <button id="floatingSuggestionBtn" type="button" aria-label="Alternar entre fotos originais e sugestão de decoração" aria-pressed="true"
     class="floating-suggestion-btn fixed bottom-4 right-4 z-50 rounded-2xl px-4 py-3 text-left text-white soft-shadow max-w-[18rem]">
     <span class="block text-xs uppercase tracking-[0.08em] opacity-90">Fotos</span>
     <span class="block text-sm sm:text-base font-semibold leading-tight">Veja a sugestão de decoração</span>
@@ -938,7 +938,7 @@
         function setButtonState(activeVersion) {
           if (activeVersion === 'new') {
             btnOriginal.className = 'flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-r border-brand-600';
-            btnOriginal.setAttribute('aria-pressed', 'false');
+            btnOriginal.setAttribute('aria-pressed', 'true');
             btnNew.className = 'suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-l border-brand-600';
             btnNew.setAttribute('aria-pressed', 'true');
             if (floatingSuggestionMode) floatingSuggestionMode.textContent = 'Modo atual: Sugestão';
