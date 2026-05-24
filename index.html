@@ -238,10 +238,10 @@
         </div>
         <div class="mt-4">
           <div id="galleryVersionToggle" class="flex w-full rounded-2xl border-2 border-brand-600 overflow-hidden soft-shadow">
-            <button id="galleryVersionOriginal" type="button" aria-pressed="true"
-              class="flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-r border-brand-600">Original</button>
-            <button id="galleryVersionNew" type="button" aria-pressed="false"
-              class="suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-l border-brand-600">Sugestão</button>
+            <button id="galleryVersionOriginal" type="button" aria-pressed="false"
+              class="flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-r border-brand-600">Original</button>
+            <button id="galleryVersionNew" type="button" aria-pressed="true"
+              class="suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-l border-brand-600">Sugestão</button>
           </div>
           <p id="galleryVersionHint" class="mt-2 text-xs text-slate-500">Troque entre as versões das fotos.</p>
         </div>
@@ -938,7 +938,7 @@
         function setButtonState(activeVersion) {
           if (activeVersion === 'new') {
             btnOriginal.className = 'flex-1 px-6 py-3 text-base font-bold tracking-wide bg-white text-brand-700 hover:bg-brand-50 border-r border-brand-600';
-            btnOriginal.setAttribute('aria-pressed', 'true');
+            btnOriginal.setAttribute('aria-pressed', 'false');
             btnNew.className = 'suggestion-animate flex-1 px-6 py-3 text-base font-bold tracking-wide bg-brand-600 text-white border-l border-brand-600';
             btnNew.setAttribute('aria-pressed', 'true');
             if (floatingSuggestionMode) floatingSuggestionMode.textContent = 'Decoração Sugestão';
@@ -1041,9 +1041,7 @@
         }
 
         var queryVersion = (usp.get('fotos') || '').toLowerCase();
-        var storedVersion = '';
-        try { storedVersion = (window.localStorage.getItem('galleryVersion') || '').toLowerCase(); } catch (e) { /* noop */ }
-        var initialVersion = (queryVersion === 'new' || storedVersion === 'new') ? 'new' : 'original';
+        var initialVersion = queryVersion === 'original' ? 'original' : 'new';
         applyVersion(initialVersion);
       })();
 
